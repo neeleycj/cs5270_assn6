@@ -1,9 +1,9 @@
 
 class WidgetRequest:
-    def __init__(self, request_id, widget_type, owner, label=None, description=None, other_attributes=None):
+    def __init__(self, request_id, widget_type, widget_id, owner, label=None, description=None, other_attributes=None):
         self.request_id = request_id
         self.widget_type = widget_type
-        self.widget_id= widget_type
+        self.widget_id= widget_id
         self.owner = owner
         self.label = label
         self.description = description
@@ -13,6 +13,7 @@ class WidgetRequest:
         return WidgetRequest(
             request_id=data.get('request_id'),
             widget_type=data.get('widget_type'),
+            widget_id=data.get('widget_id'),
             owner=data.get('owner'),
             label=data.get('label'),
             description=data.get('description'),
