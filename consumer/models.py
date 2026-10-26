@@ -33,3 +33,4 @@ class WidgetRequest:
         for key,  value  in self.other_attributes.items():
             formatted_data[key] = value
         return formatted_data
+    
