@@ -15,14 +15,14 @@ class S3RequestReceiver(RequestReceiver):
 
     def get_next_request(self):
         res = self.s3_client.list_objects_v2(Bucket=self.bucket_name, MaxKeys = 1)
-        if res['Contents'] is None:
+        if 'Contents' not in res or res['Contents'] is None:
             return None
 
         key = res['Contents'][0]['Key']
 
         object = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)
-        object['Body'].read().decode('utf-8')
-        parsed = json.loads(object)
+        raw_string = object['Body'].read().decode('utf-8')
+        parsed = json.loads(raw_string)
 
         self.s3_client.delete_object(Bucket=self.bucket_name, Key=key)
         return parsed
