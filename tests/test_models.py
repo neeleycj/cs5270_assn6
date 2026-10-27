@@ -1,4 +1,3 @@
-import pytest 
 from consumer.models import WidgetRequest
 
 def  test_widget_request_init():
