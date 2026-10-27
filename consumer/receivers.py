@@ -1,6 +1,7 @@
 import abc
 import boto3
 import json
+from consumer.models import WidgetRequest
 
 class RequestReceiver:
     @abc.abstractmethod
@@ -23,6 +24,5 @@ class S3RequestReceiver(RequestReceiver):
         object = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)
         raw_string = object['Body'].read().decode('utf-8')
         parsed = json.loads(raw_string)
-
         self.s3_client.delete_object(Bucket=self.bucket_name, Key=key)
-        return parsed
+        return WidgetRequest.from_dict(parsed)

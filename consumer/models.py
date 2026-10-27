@@ -9,15 +9,20 @@ class WidgetRequest:
         self.description = description
         self.other_attributes = other_attributes
 
+    
     def from_dict(data):
+        other_attributes = {}
+        for key, value in data.get("other_attributes", {}).items():
+            other_attributes[key] = value
+
         return WidgetRequest(
-            request_id=data.get('request_id'),
-            widget_type=data.get('widget_type'),
-            widget_id=data.get('widget_id'),
-            owner=data.get('owner'),
+            request_id=data["requestId"],
+            widget_type=data["type"],
+            widget_id=data["widgetId"],
+            owner=data["owner"],
             label=data.get('label'),
             description=data.get('description'),
-            other_attributes=data.get('other_attributes')
+            other_attributes=other_attributes
         )
     def to_dict(self):
         return {
