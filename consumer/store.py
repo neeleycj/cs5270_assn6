@@ -19,15 +19,15 @@ class S3Storage(Storage):
         self.s3_client = s3_client
     def store(self, widget):
         key = widget.s3_key_generator()
-        body  = json.dumps(widget)
+        body  = json.dumps(widget.to_dict())
         self.s3_client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
 
 class DynamoDBStorage:
-    def __init__(self, table_name, DDB=boto3.resource('dynamodb')):
+    def __init__(self, table_name, DDB=boto3.resource('dynamodb', region_name='us-east-1')):
         self.table_name = table_name
         self.DDB = DDB
 
     def store(self, widget):
         dict = widget.dynamoDB_formatter()
         table = self.DDB.Table(self.table_name)
-        self.DDB.put_item(Item=dict)
+        table.put_item(Item=dict)
