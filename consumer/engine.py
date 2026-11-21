@@ -16,8 +16,15 @@ class Engine:
                     req = self.receiver.get_next_request()
                     if req is not None:
                         logger.info(f"Received request: {req.request_id}")
-                        self.storage.store(req)
-                        logger.info(f"Stored request: {req.request_id}")
+                        if req.widget_type == "store":
+                            self.storage.store(req)
+                            logger.info(f"Stored request: {req.request_id}")
+                        if req.widget_type == "update":
+                            self.storage.update(req)
+                            logger.info(f"Updated request: {req.request_id}")
+                        if req.widget_type == "delete":
+                            self.storage.delete(req)
+                            logger.info(f"Deleted request: {req.request_id}")
                     else:
                         logger.info("No new requests found. Waiting for 0.1 seconds before checking again.")
                         time.sleep(0.1)
@@ -30,8 +37,15 @@ class Engine:
                     req = self.receiver.get_next_request()
                     if req is not None:
                         logger.info(f"Received request: {req.request_id}")
-                        self.storage.store(req)
-                        logger.info(f"Stored request: {req.request_id}")
+                        if req.widget_type == "store":
+                            self.storage.store(req)
+                            logger.info(f"Stored request: {req.request_id}")
+                        if req.widget_type == "update":
+                            self.storage.update(req)
+                            logger.info(f"Updated request: {req.request_id}")
+                        if req.widget_type == "delete":
+                            self.storage.delete(req)
+                            logger.info(f"Deleted request: {req.request_id}")
                     else:
                         logger.info("No new requests found. Waiting for 0.1 seconds before checking again.")
                         time.sleep(0.1)
