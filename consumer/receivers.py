@@ -1,6 +1,7 @@
 import abc
 import boto3
 import json
+import collections
 from consumer.models import WidgetRequest
 
 class RequestReceiver:
@@ -26,3 +27,20 @@ class S3RequestReceiver(RequestReceiver):
         parsed = json.loads(raw_string)
         self.s3_client.delete_object(Bucket=self.bucket_name, Key=key)
         return WidgetRequest.from_dict(parsed)
+
+class SQSRequestReceiver(RequestReceiver):
+    def __init__(self, queue_name, sqs_client=boto3.client('sqs')):
+        self.queue_name = queue_name
+        self.sqs_client = sqs_client
+        self.queue_url = self.sqs_client.get_queue_url(QueueName=self.queue_name)['QueueUrl']
+        self.cache = collections.deque()
+
+    def get_next_request(self):
+        if not self.cache:
+            response = self.sqs_client.receive__message(
+                QueueUrl=self.queue_url,
+                MaxNumberOfMessages=10,
+                WaitTimeSeconds=10
+            )
+            message = response['Messages'][0]
+            receipt_handle = message['ReceiptHandle']
