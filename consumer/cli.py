@@ -9,10 +9,17 @@ def parse_args(args=None):
     parser.add_argument('-r', '--region')
     parser.add_argument('-rb', '--request-bucket')
     parser.add_argument('-mrt', '--max-runtime')
+    parser.add_argument('-rq', '--request-queue')
     parsed  = parser.parse_args(args)
 
     if parsed.store == 's3' and not parsed.target_bucket:
         parser.error("The --target-bucket argument is required when --store is 's3'.")
     if parsed.store == 'dynamodb' and not parsed.table_name:
         parser.error("The --table-name argument is required when --store is 'dynamodb'.")
+    if not parsed.request_bucket:
+        parser.error("The --request-bucket argument is required.")
+    if not parsed.request_queue:
+        parser.error("The --request-queue argument is required.")
+    if not parsed.target_bucket or not parsed.table_name:
+        parser.error("Either --target-bucket or --table-name must be provided.")
     return parsed
