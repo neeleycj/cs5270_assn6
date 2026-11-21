@@ -42,5 +42,16 @@ class SQSRequestReceiver(RequestReceiver):
                 MaxNumberOfMessages=10,
                 WaitTimeSeconds=10
             )
-            message = response['Messages'][0]
-            receipt_handle = message['ReceiptHandle']
+            self.cache = response.get("Messages", [])
+
+        if not self.cache:
+            return None
+        
+        else:
+            message = self.cache.popleft()
+            body = json.loads(message['Body'])
+            self.sqs_client.delete_message(
+                QueueUrl=self.queue_url,
+                ReceiptHandle=message['ReceiptHandle']
+            )
+            return WidgetRequest.from_dict(body)
