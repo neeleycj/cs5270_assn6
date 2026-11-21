@@ -6,7 +6,10 @@ import consumer.store
 
 def main():
     logging.basicConfig(filename="consumer.log", level=logging.INFO)
-    receiver = consumer.receivers.S3RequestReceiver(args.request_bucket)
+    if args.request_bucket:
+        receiver = consumer.receivers.S3RequestReceiver(args.request_bucket)
+    if args.request_queue:
+        receiver = consumer.receivers.SQSRequestReceiver(args.request_queue)
     storage = ''
     if args.target_bucket:
         storage = consumer.store.S3Storage(args.target_bucket)
