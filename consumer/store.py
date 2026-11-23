@@ -19,15 +19,20 @@ class S3Storage(Storage):
         self.s3_client = s3_client
 
     def store(self, widget):
-        key = widget.s3_key_generator()
-        body  = json.dumps(widget.to_dict())
-        self.s3_client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
+        try:
+            key = widget.s3_key_generator()
+            body  = json.dumps(widget.to_dict())
+            self.s3_client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
+            print(f"Stored widget with id: {widget.widget_id}")
+        except Exception as e:
+            print(f"Error storing widget: {e}")
 
     def update(self, widget):
         try:
             key = widget.s3_key_generator()
             body  = json.dumps(widget.to_dict())
             self.s3_client.put_object(Bucket=self.bucket_name, Key=key, Body=body)
+            print(f"Updated widget with id: {widget.widget_id}")
         except Exception as e:
             print(f"Error updating widget: {e}")
 
@@ -35,6 +40,7 @@ class S3Storage(Storage):
         try:
             key = widget.s3_key_generator()
             self.s3_client.delete_object(Bucket=self.bucket_name, Key=key)
+            print(f"Deleted widget with id: {widget.widget_id}")
         except Exception as e:
             print(f"Error deleting widget: {e}")
 
@@ -44,15 +50,20 @@ class DynamoDBStorage:
         self.DDB = DDB
 
     def store(self, widget):
-        dict = widget.dynamoDB_formatter()
-        table = self.DDB.Table(self.table_name)
-        table.put_item(Item=dict)
+        try:
+            dict = widget.dynamoDB_formatter()
+            table = self.DDB.Table(self.table_name)
+            table.put_item(Item=dict)
+            print(f"Stored widget with id: {dict['id']}")
+        except Exception as e:
+            print(f"Error storing widget: {e}")
 
     def update(self, widget):
         try:
             dict = widget.dynamoDB_formatter()
             table = self.DDB.Table(self.table_name)
             table.put_item(Item=dict)
+            print(f"Updated widget with id: {dict['id']}")
         except Exception as e:
             print(f"Error updating widget: {e}")
             
@@ -60,6 +71,7 @@ class DynamoDBStorage:
         try:
             dict = widget.dynamoDB_formatter()
             table = self.DDB.Table(self.table_name)
-            table.delete_item(Key={'request_id': dict['request_id']})
+            table.delete_item(Key={'id': dict['id']})
+            print(f"Deleted widget with id: {dict['id']}")
         except Exception as e:
             print(f"Error deleting widget: {e}")

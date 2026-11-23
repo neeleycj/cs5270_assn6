@@ -72,13 +72,13 @@ def test_DDB_store():
         TableName="test-table",
         KeySchema=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'id',
                 'KeyType': 'HASH'
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'id',
                 'AttributeType': 'N'
             }
         ],
@@ -87,21 +87,21 @@ def test_DDB_store():
             'WriteCapacityUnits': 1
         }
     )
-    test_widget = WidgetRequest(request_id=1, widget_type='create', widget_id=1, owner='owner1', label='label1', description='desc1', other_attributes={'attr1': 'value1'})
+    test_widget = WidgetRequest(request_id=1, widget_type='create', widget_id=1, owner='owner1', label='label1', description='desc1', other_attributes=[{'attr1': 'value1'}])
     DDB_store = DynamoDBStorage("test-table", DDB)
     DDB_store.store(test_widget)
 
-    response = table.get_item(Key={'request_id': 1})
+    response = table.get_item(Key={'id': 1})
 
     content = response['Item']
     assert content == {
         'request_id': 1,
         'widget_type': 'create',
-        'widget_id': 1,
+        'id': 1,
         'owner': 'owner1',
         'label': 'label1',
         'description': 'desc1',
-        'attr1': 'value1',
+        'other_attributes': [{'attr1': 'value1'}]
     }
 
 @mock_aws
@@ -111,13 +111,13 @@ def test_DDB_update():
         TableName="test-table",
         KeySchema=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'id',
                 'KeyType': 'HASH'
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'id',
                 'AttributeType': 'N'
             }
         ],
@@ -126,24 +126,24 @@ def test_DDB_update():
             'WriteCapacityUnits': 1
         }
     )
-    test_widget = WidgetRequest(request_id=1, widget_type='create', widget_id=1, owner='owner1', label='label1', description='desc1', other_attributes={'attr1': 'value1'})
+    test_widget = WidgetRequest(request_id=1, widget_type='create', widget_id=1, owner='owner1', label='label1', description='desc1', other_attributes=[{'attr1': 'value1'}])
     DDB_store = DynamoDBStorage("test-table", DDB)
     DDB_store.store(test_widget)
 
-    updated_widget = WidgetRequest(request_id=1, widget_type='update', widget_id=1, owner='owner1', label='label2', description='desc2', other_attributes={'attr2': 'value2'})
+    updated_widget = WidgetRequest(request_id=1, widget_type='update', widget_id=1, owner='owner1', label='label2', description='desc2', other_attributes=[{'attr2': 'value2'}])
     DDB_store.update(updated_widget)
 
-    response = table.get_item(Key={'request_id': 1})
+    response = table.get_item(Key={'id': 1})
 
     content = response['Item']
     assert content == {
         'request_id': 1,
         'widget_type': 'update',
-        'widget_id': 1,
+        'id': 1,
         'owner': 'owner1',
         'label': 'label2',
         'description': 'desc2',
-        'attr2': 'value2',
+        'other_attributes': [{'attr2': 'value2'}],
     }
 
 @mock_aws
@@ -153,13 +153,13 @@ def test_DDB_delete():
         TableName="test-table",
         KeySchema=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'id',
                 'KeyType': 'HASH'
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'id',
                 'AttributeType': 'N'
             }
         ],
@@ -168,12 +168,12 @@ def test_DDB_delete():
             'WriteCapacityUnits': 1
         }
     )
-    test_widget = WidgetRequest(request_id=1, widget_type='create', widget_id=1, owner='owner1', label='label1', description='desc1', other_attributes={'attr1': 'value1'})
+    test_widget = WidgetRequest(request_id=1, widget_type='create', widget_id=1, owner='owner1', label='label1', description='desc1', other_attributes=[{'attr1': 'value1'}])
     DDB_store = DynamoDBStorage("test-table", DDB)
     DDB_store.store(test_widget)
 
     DDB_store.delete(test_widget)
 
-    response = table.get_item(Key={'request_id': 1})
+    response = table.get_item(Key={'id': 1})
 
     assert 'Item' not in response

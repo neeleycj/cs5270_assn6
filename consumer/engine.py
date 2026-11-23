@@ -15,16 +15,16 @@ class Engine:
                     logger.info("Checking for new requests...")
                     req = self.receiver.get_next_request()
                     if req is not None:
-                        logger.info(f"Received request: {req.request_id}")
+                        logger.info(f"Received request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                         if req.widget_type == "create":
                             self.storage.store(req)
-                            logger.info(f"Stored request: {req.request_id}")
+                            logger.info(f"Stored request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                         if req.widget_type == "update":
                             self.storage.update(req)
-                            logger.info(f"Updated request: {req.request_id}")
+                            logger.info(f"Updated request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                         if req.widget_type == "delete":
                             self.storage.delete(req)
-                            logger.info(f"Deleted request: {req.request_id}")
+                            logger.info(f"Deleted request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                     else:
                         logger.info("No new requests found. Waiting for 0.1 seconds before checking again.")
                         time.sleep(0.1)
@@ -36,16 +36,16 @@ class Engine:
                     logger.info("Checking for new requests...")
                     req = self.receiver.get_next_request()
                     if req is not None:
-                        logger.info(f"Received request: {req.request_id}")
-                        if req.widget_type == "store":
+                        logger.info(f"Received request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
+                        if req.widget_type == "create":
                             self.storage.store(req)
-                            logger.info(f"Stored request: {req.request_id}")
+                            logger.info(f"Stored request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                         if req.widget_type == "update":
                             self.storage.update(req)
-                            logger.info(f"Updated request: {req.request_id}")
+                            logger.info(f"Updated request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                         if req.widget_type == "delete":
                             self.storage.delete(req)
-                            logger.info(f"Deleted request: {req.request_id}")
+                            logger.info(f"Deleted request: {req.request_id} of type: {req.widget_type} with widget_id: {req.widget_id} at {time.strftime('%H:%M:%S', time.localtime())}")
                     else:
                         logger.info("No new requests found. Waiting for 0.1 seconds before checking again.")
                         time.sleep(0.1)

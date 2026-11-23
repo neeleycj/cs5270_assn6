@@ -11,10 +11,6 @@ class WidgetRequest:
 
     
     def from_dict(data):
-        other_attributes = {}
-        for key, value in data.get("otherAttributes", {}).items():
-            other_attributes[key] = value
-
         return WidgetRequest(
             request_id=data["requestId"],
             widget_type=data["type"],
@@ -22,8 +18,9 @@ class WidgetRequest:
             owner=data["owner"],
             label=data.get('label'),
             description=data.get('description'),
-            other_attributes=other_attributes
+            other_attributes=data.get('otherAttributes', [])
         )
+    
     def to_dict(self):
         return {
             'request_id': self.request_id,
@@ -44,11 +41,10 @@ class WidgetRequest:
         formatted_data = {}
         formatted_data['request_id'] = self.request_id
         formatted_data['widget_type'] = self.widget_type
-        formatted_data['widget_id'] = self.widget_id
+        formatted_data['id'] = self.widget_id
         formatted_data['owner'] = self.owner
         formatted_data['label'] = self.label
         formatted_data['description'] = self.description
-        for key,  value  in self.other_attributes.items():
-            formatted_data[key] = value
+        formatted_data['other_attributes'] = self.other_attributes
         return formatted_data
     
