@@ -52,7 +52,7 @@ class DynamoDBStorage:
         try:
             dict = widget.dynamoDB_formatter()
             table = self.DDB.Table(self.table_name)
-            table.update_item(Item=dict)
+            table.put_item(Item=dict)
         except Exception as e:
             print(f"Error updating widget: {e}")
             
@@ -60,6 +60,6 @@ class DynamoDBStorage:
         try:
             dict = widget.dynamoDB_formatter()
             table = self.DDB.Table(self.table_name)
-            table.delete_item(Item=dict)
+            table.delete_item(Key={'request_id': dict['request_id']})
         except Exception as e:
             print(f"Error deleting widget: {e}")
