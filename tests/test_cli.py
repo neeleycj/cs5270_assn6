@@ -13,6 +13,12 @@ def test_correct_DDB():
     assert args.request_bucket == "test-requests"
     assert args.store == "dynamodb"
     assert args.table_name  ==  "test-table"
+def test_correct_request_queue():
+    test_args = ["-rq", "test-queue", "--store", "s3", "--target-bucket", "test-target"]
+    args = parse_args(test_args)
+    assert args.request_queue == "test-queue"
+    assert args.store == "s3"
+    assert args.target_bucket  ==  "test-target"
 
 def test_incorrect_args():
     test_args = ["-rb", "test-requests", "--store", "s3", "--target-bucket"]
