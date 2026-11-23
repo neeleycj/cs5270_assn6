@@ -12,7 +12,7 @@ class WidgetRequest:
     
     def from_dict(data):
         other_attributes = {}
-        for key, value in data.get("other_attributes", {}).items():
+        for key, value in data.get("otherAttributes", {}).items():
             other_attributes[key] = value
 
         return WidgetRequest(

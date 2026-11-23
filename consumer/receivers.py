@@ -29,22 +29,22 @@ class S3RequestReceiver(RequestReceiver):
         return WidgetRequest.from_dict(parsed)
 
 class SQSRequestReceiver(RequestReceiver):
-    def __init__(self, queue_name, sqs_client=boto3.client('sqs')):
+    def __init__(self, queue_name, sqs_client=boto3.client('sqs', region_name='us-east-1')):
         self.queue_name = queue_name
         self.sqs_client = sqs_client
         self.queue_url = self.sqs_client.get_queue_url(QueueName=self.queue_name)['QueueUrl']
         self.cache = collections.deque()
 
     def get_next_request(self):
-        if not self.cache:
-            response = self.sqs_client.receive__message(
+        if  len(self.cache) == 0:
+            response = self.sqs_client.receive_message(
                 QueueUrl=self.queue_url,
                 MaxNumberOfMessages=10,
                 WaitTimeSeconds=10
             )
-            self.cache = response.get("Messages", [])
+            self.cache.extend(response.get('Messages', []))
 
-        if not self.cache:
+        if len(self.cache) == 0:
             return None
         
         else:
