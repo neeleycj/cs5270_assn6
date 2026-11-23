@@ -16,7 +16,7 @@ class Engine:
                     req = self.receiver.get_next_request()
                     if req is not None:
                         logger.info(f"Received request: {req.request_id}")
-                        if req.widget_type == "store":
+                        if req.widget_type == "create":
                             self.storage.store(req)
                             logger.info(f"Stored request: {req.request_id}")
                         if req.widget_type == "update":
